@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic</title>
+</head>
+<body>
+    <div class="box">
+        <div class="glass"></div>
+        <div class="content">
+            <table>
+                <tbody>
+                   <tr><div class="name1">TITANIC DEPLOYMENT OUTPUT</div></tr> 
+                    <tr>
+                        <td>Ticket class</td>
+                        <td>
+                            <select id="pclass">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sex</td>
+                        <td>
+                            <select id="sex">
+                                <option value="1">Female</option>                        
+                                <option value="2">Male</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Age</td>
+                        <td>
+                            <input id="age" type="number"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td># of Siblings/Spouses</td>
+                        <td>
+                            <input id="sibsp" type="number"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td># of Parents/children</td>
+                        <td>
+                            <input id="parch" type="number"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fare</td>
+                        <td>
+                            <input id="fare"/>
+                        </td>
+                        </tr>
+                        <tr>
+                                <td>Embarked</td>
+                                <td>
+                                    <select id="embarked">
+                                        <option value="1">S</option>
+                                        <option value="2">C</option>
+                                        <option value="3">Q</option>
+                                    </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Survived</td>
+                            <td id="survived"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="container">
+                                    <button id="submit" type="button" class="button1">Predict</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>    
+    </div>
+    <script>
+        document.getElementById("survived").innerHTML = "";
+        document.getElementById("submit").addEventListener("click",async() => {
+            response = await fetch("http://localhost:8080",{
+                method:"POST",
+                body: JSON.stringify({
+                    "pclass":parseInt(document.getElementById("pclass").value),
+                    "sex":parseInt(document.getElementById("sex").value),
+                    "age":parseFloat(document.getElementById("age").value),
+                    "sibsp":parseInt(document.getElementById("sibsp").value),
+                    "parch":parseInt(document.getElementById("parch").value),
+                    "fare":parseFloat(document.getElementById("fare").value),
+                    "embarked":parseInt(document.getElementById("embarked").value),
+                })
+            });
+            const survivedCode =  parseInt(await response.text());
+            document.getElementById("survived").innerHTML = survivedCode ? "YES" : "NO"
+        })
+    </script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .name1 {
+            text-align: center;
+            font-style: normal;
+            font-weight: bold;
+            color: cadetblue;
+            margin-bottom: 10px;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-wrap: wrap;
+            background: #010615;
+            font-size: 15px;
+            font-family: poppins;
+        }
+        .box {
+            position: relative;
+            width: 400px;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #051323;
+            margin: 40px;
+        }
+        .box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: #fff;
+            z-index: -1;
+        }
+        .box::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: cadetblue;
+            z-index: -2;
+            filter: blur(40px);
+        }
+        .box:nth-child(1)::after,
+        .box:nth-child(1)::before {
+          background: linear-gradient(235deg,white, #010615, cadetblue);
+          animation: anim 2s linear infinite; 
+        }
+        .box .glass {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            display: block;
+            background: rgba(255,255,255,.1);
+            pointer-events:none;
+          }
+          
+          .box .content {
+            padding: 20px;
+            color: #fff;
+          }
+          .button1{
+            color: cadetblue;
+            background-color: transparent;
+            padding: 5px;
+            margin-top: 20px;
+            text-align:center;
+            display: inline-block;
+            font-size: 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            border: solid cadetblue;
+            width: 150px;
+            height: 35px;
+          }
+          .button1:hover{
+            background: cadetblue;
+            color:#000;
+            box-shadow: 0 0 25px cadetblue;
+          }
+          @keyframes anim {
+            0%,100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0;
+            }
+          }    
+        input,select {
+            width:100%;
+        }
+        td {
+            padding:5px;
+        }
+        td > div {
+            text-align: center;
+        }
+        #survived {
+            font-style:normal; 
+            font-weight: bold;
+            color:whitesmoke;
+        }
+    </style>
+</body>
+</html>
